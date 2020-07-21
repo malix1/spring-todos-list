@@ -3,8 +3,10 @@ package com.demo.todolists.Entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQuery(name="find_all_todos", query="select t from Todo t")
 public class Todo {
 	
 	@Id
