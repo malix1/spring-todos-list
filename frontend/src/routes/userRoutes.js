@@ -1,7 +1,7 @@
-import MainPage from "../views/Main";
 import TodosPage from "../views/Todos";
+import HomePage from "../views/Home";
 
 export const userRoutes = [
-  { path: "/", component: MainPage },
   { path: "/todos", component: TodosPage },
+  { path: "/", component: HomePage },
 ];
