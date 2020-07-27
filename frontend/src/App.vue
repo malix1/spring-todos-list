@@ -1,17 +1,13 @@
 <template>
   <div id="app">
-        <router-link to="/foo">Go to Foo</router-link>
-    <img alt="Vue logo" src="./assets/logo.png">
-
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-}
+  name: "App"
+};
 </script>
 
 <style>
