@@ -37,12 +37,12 @@
     </transition-group>
 
     <div class="extra-container">
-<!--       <div>
+      <!--       <div>
         <label>
           <input type="checkbox" :checked="!anyRemaining" @change="checkAllTodos" /> Check All
         </label>
       </div>
-      <div>{{ remaining }} items left</div> -->
+      <div>{{ remaining }} items left</div>-->
     </div>
 
     <div class="extra-container">
@@ -53,15 +53,17 @@
       </div>-->
 
       <div>
-       <!--  <transition name="fade">
+        <!--  <transition name="fade">
           <button v-if="showClearCompletedButton" @click="clearCompleted">Clear Completed</button>
-        </transition> -->
+        </transition>-->
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "Todos",
   data: function() {
@@ -69,20 +71,20 @@ export default {
       newTodo: "",
       idForTodo: 3,
       beforeEditCache: "",
-      filter: "all",
-      todos: [
-        {
-          id: 1,
-          title: "Write kanji",
-          isDone: false
-        },
-        {
-          id: 2,
-          title: "Study grammar",
-          isDone: false
-        }
-      ]
+      filter: "all"
     };
+  },
+  computed: mapGetters({
+    todos: "todos/getTodos"
+  }),
+  methods: {
+    addTodo() {
+      this.addTodoAction(this.newTodo);
+      this.newTodo = ""
+    },
+    ...mapActions({
+      addTodoAction: "todos/addTodo"
+    })
   }
 };
 </script>
@@ -93,7 +95,6 @@ export default {
   max-width: 60%;
   margin: 5% auto;
 }
-
 
 .todo-input {
   width: 100%;
