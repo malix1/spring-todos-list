@@ -41,11 +41,34 @@ const actions = {
       commit("pushTodoToTodos", newTodo);
     }
   },
+
+  changeTodoStatus({ commit }, todo) {
+    const changedTodo = { ...todo, completed: !todo.completed };
+    commit("saveChangedTodoStatus", changedTodo);
+  },
+
+  removeTodo({ commit }, id) {
+    commit("removeTodoFromTodos", id)
+  },
 };
 
 const mutations = {
   pushTodoToTodos(state, newTodo) {
     state.todos.push(newTodo);
+  },
+
+  saveChangedTodoStatus(state, changedTodo) {
+    const updatedTodo = state.todos.map((todo) => {
+      if (todo.id === changedTodo.id) {
+        return changedTodo;
+      }
+      return todo;
+    });
+    state.todos = updatedTodo;
+  },
+  removeTodoFromTodos(state, id) {
+    const updatedTodos = state.todos.filter((todo) => todo.id !== id);
+    state.todos = updatedTodos;
   },
 };
 

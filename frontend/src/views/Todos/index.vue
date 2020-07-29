@@ -12,9 +12,9 @@
       enter-active-class="animated fadeInUp"
       leave-active-class="animated fadeOutDown"
     >
-      <div v-for="(todo, index) in todos" :key="todo.id" class="todo-item">
+      <div v-for="(todo) in todos" :key="todo.id" class="todo-item">
         <div class="todo-item-left">
-          <input type="checkbox" v-model="todo.completed" />
+          <input type="checkbox" :checked="todo.completed" @change="changeStatus(todo)" />
           <div
             v-if="!todo.editing"
             @dblclick="editTodo(todo)"
@@ -32,7 +32,7 @@
             v-focus
           />
         </div>
-        <div class="remove-item" @click="removeTodo(index)">&times;</div>
+        <div class="remove-item" @click="removeTodo(todo.id)">&times;</div>
       </div>
     </transition-group>
 
@@ -69,7 +69,6 @@ export default {
   data: function() {
     return {
       newTodo: "",
-      idForTodo: 3,
       beforeEditCache: "",
       filter: "all"
     };
@@ -80,10 +79,15 @@ export default {
   methods: {
     addTodo() {
       this.addTodoAction(this.newTodo);
-      this.newTodo = ""
+      this.newTodo = "";
+    },
+    changeStatus(todo) {
+      this.changeTodoStatus(todo);
     },
     ...mapActions({
-      addTodoAction: "todos/addTodo"
+      addTodoAction: "todos/addTodo",
+      changeTodoStatus: "todos/changeTodoStatus",
+      removeTodo: "todos/removeTodo"
     })
   }
 };
