@@ -27,6 +27,12 @@ const getters = {
       }
     }).id;
   },
+  getRemaining: (state) => {
+    return state.todos.filter((todo) => todo.completed === false).length;
+  },
+  getAnyRemaining: (state, getters) => {
+    return getters.getRemaining != 0;
+  },
 };
 
 const actions = {
@@ -48,7 +54,11 @@ const actions = {
   },
 
   removeTodo({ commit }, id) {
-    commit("removeTodoFromTodos", id)
+    commit("removeTodoFromTodos", id);
+  },
+
+  changeAllTodosStatus({ commit }, event) {
+    commit("saveAllTodosStatus", event);
   },
 };
 
@@ -68,6 +78,12 @@ const mutations = {
   },
   removeTodoFromTodos(state, id) {
     const updatedTodos = state.todos.filter((todo) => todo.id !== id);
+    state.todos = updatedTodos;
+  },
+  saveAllTodosStatus(state, event) {
+    const updatedTodos = state.todos.map((todo) => {
+      return { ...todo, completed: event.target.checked };
+    });
     state.todos = updatedTodos;
   },
 };

@@ -37,12 +37,12 @@
     </transition-group>
 
     <div class="extra-container">
-      <!--       <div>
+      <div>
         <label>
-          <input type="checkbox" :checked="!anyRemaining" @change="checkAllTodos" /> Check All
+          <input type="checkbox" :checked="!anyRemaining" @change="changeAllTodosStatus" /> Check All
         </label>
       </div>
-      <div>{{ remaining }} items left</div>-->
+      <div>{{ remaining }} items left</div>
     </div>
 
     <div class="extra-container">
@@ -74,7 +74,9 @@ export default {
     };
   },
   computed: mapGetters({
-    todos: "todos/getTodos"
+    todos: "todos/getTodos",
+    remaining: "todos/getRemaining",
+    anyRemaining: "todos/getAnyRemaining"
   }),
   methods: {
     addTodo() {
@@ -84,10 +86,14 @@ export default {
     changeStatus(todo) {
       this.changeTodoStatus(todo);
     },
+    changeAllTodosStatus(event) {
+      this.saveAllTodosStatus(event);
+    },
     ...mapActions({
       addTodoAction: "todos/addTodo",
       changeTodoStatus: "todos/changeTodoStatus",
-      removeTodo: "todos/removeTodo"
+      removeTodo: "todos/removeTodo",
+      saveAllTodosStatus: "todos/changeAllTodosStatus"
     })
   }
 };
