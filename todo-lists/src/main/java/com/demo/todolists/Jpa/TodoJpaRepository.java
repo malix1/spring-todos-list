@@ -7,14 +7,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.todolists.Entity.Todo;
 
 @Repository
-@Transactional
 public class TodoJpaRepository {
-	
 	@PersistenceContext
 	EntityManager entityManager;
 	
@@ -35,5 +32,4 @@ public class TodoJpaRepository {
 		Todo todo = findById(id);
 		entityManager.remove(todo);
 	}
-	
 }
