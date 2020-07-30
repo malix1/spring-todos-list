@@ -24,7 +24,7 @@ public class TodoJpaRepository {
 		return entityManager.find(Todo.class, id);
 	}
 	
-	public Todo update(Todo todo) {
+	public List<Todo> update(List<Todo> todo) {
 		return entityManager.merge(todo);
 	}
 	

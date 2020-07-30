@@ -13,40 +13,40 @@ public class Todo {
 	@GeneratedValue
 	private int id;
 	
-	private String name;
-	private boolean isDone;
+	private String title;
+	private boolean completed;
 	
-	public Todo(int id, String name, boolean isDone) {
+	public Todo(int id, String title, boolean completed) {
 		super();
 		this.id = id;
-		this.name = name;
-		this.isDone = isDone;
+		this.title = title;
+		this.completed = completed;
 	}
 	
-	public Todo(String name, boolean isDone) {
+	public Todo(String title, boolean completed) {
 		super();
-		this.name = name;
-		this.isDone = isDone;
+		this.title = title;
+		this.completed = completed;
 	}
 	
 	public Todo() {
 		
 	}
 
-	public String getName() {
-		return name;
+	public String gettitle() {
+		return title;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void settitle(String title) {
+		this.title = title;
 	}
 
-	public boolean isDone() {
-		return isDone;
+	public boolean completed() {
+		return completed;
 	}
 
-	public void setDone(boolean isDone) {
-		this.isDone = isDone;
+	public void setDone(boolean completed) {
+		this.completed = completed;
 	}
 	
 	
