@@ -1,9 +1,12 @@
-package com.demo.responses;
+package com.demo.todolists.responses;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.demo.todolists.Entity.Todo;
 
+@Component
 public class TodoResponse {
 	private List<Todo> todos;
 	private String status;
