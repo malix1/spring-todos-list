@@ -4,14 +4,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@JsonIgnoreProperties( allowGetters = true)
 public class Todo {
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)
-	private int id;
+	private Integer id;
 	
 	private String title;
 	private String username;
@@ -20,16 +22,24 @@ public class Todo {
 	public Todo() {
 		
 	}
+	
+	public Integer getId() {
+		return id;
+	}
 
-	public String gettitle() {
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
 		return title;
 	}
 
-	public void settitle(String title) {
+	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	public boolean completed() {
+	public boolean isCompleted() {
 		return completed;
 	}
 
