@@ -10,6 +10,7 @@ import com.demo.todolists.Entity.Todo;
 public class TodoResponse {
 	private List<Todo> todos;
 	private String status;
+	private String message;
 	
 	public List<Todo> getTodos() {
 		return todos;
@@ -27,14 +28,23 @@ public class TodoResponse {
 		this.status = status;
 	}
 
-	public TodoResponse(List<Todo> todos, String status) {
+	public TodoResponse(List<Todo> todos, String status, String message) {
 		super();
 		this.todos = todos;
 		this.status = status;
+		this.message = message;
 	}
 
 	public TodoResponse() {
 		super();
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 }

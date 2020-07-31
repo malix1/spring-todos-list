@@ -2,32 +2,20 @@ package com.demo.todolists.Entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQuery(name="find_all_todos", query="select t from Todo t")
 public class Todo {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	private int id;
 	
 	private String title;
+	private String username;
 	private boolean completed;
-	
-	public Todo(int id, String title, boolean completed) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.completed = completed;
-	}
-	
-	public Todo(String title, boolean completed) {
-		super();
-		this.title = title;
-		this.completed = completed;
-	}
 	
 	public Todo() {
 		
@@ -45,8 +33,16 @@ public class Todo {
 		return completed;
 	}
 
-	public void setDone(boolean completed) {
+	public void setCompleted(boolean completed) {
 		this.completed = completed;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	
