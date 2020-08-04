@@ -33,9 +33,11 @@ public class TodoController {
 		return response;
 	}
 	
-	@PostMapping(value="/todos",  produces = "application/json")
-	public TodoResponse saveTodos(@RequestBody  Map<String, List<Todo>> todos) {
-		todoService.insert(todos.get("todos"));	
+	@PostMapping(value="/todos")
+	public TodoResponse saveTodos(@RequestBody  Map<String, List<Todo>> body) {
+		List<Todo> todos = body.get("todos");
+		todoService.insert(todos);	
+		response.setTodos(todos);
 		response.setStatus("200");
 		response.setMessage("Todos saved successfuly.");
 		return response;
