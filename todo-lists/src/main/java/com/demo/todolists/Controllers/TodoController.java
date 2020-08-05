@@ -15,7 +15,7 @@ import com.demo.todolists.Entity.Todo;
 import com.demo.todolists.responses.TodoResponse;
 import com.demo.todolists.service.TodoService;
 
-@CrossOrigin(origins = "http://localhost:8080")
+
 @RequestMapping("/api")
 @RestController
 public class TodoController {
