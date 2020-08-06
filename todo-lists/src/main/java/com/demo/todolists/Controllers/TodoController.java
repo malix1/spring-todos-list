@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ public class TodoController {
 	private TodoResponse response;
 		
 	@GetMapping(value="/todos")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public TodoResponse retrieveTodos() {
 		response.setStatus("200");
 		response.setMessage("All todos retrieved.");
@@ -34,6 +36,7 @@ public class TodoController {
 	}
 	
 	@PostMapping(value="/todos")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public TodoResponse saveTodos(@RequestBody  Map<String, List<Todo>> body) {
 		List<Todo> todos = body.get("todos");
 		todoService.insert(todos);	
@@ -43,7 +46,14 @@ public class TodoController {
 		return response;
 	}
 	
+	@GetMapping("/todos/secured")
+	@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+	public String securedTodos() {
+		return "Secured";
+	}
+	
 	@GetMapping(value="/")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public String indexTodo() {
 		return "Welcome the api Urls";
 	}
