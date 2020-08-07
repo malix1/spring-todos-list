@@ -46,6 +46,7 @@
     </div>
 
     <div class="extra-container">
+      <button @click="getTodos">Get Todo</button>
       <!--   <div>
         <button :class="{ active: filter == 'all' }" @click="filter = 'all'">All</button>
         <button :class="{ active: filter == 'active' }" @click="filter = 'active'">Active</button>
@@ -63,7 +64,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-
+import { getAllTodos } from "../../api/todoService";
 export default {
   name: "Todos",
   data: function() {
@@ -72,6 +73,9 @@ export default {
       beforeEditCache: "",
       filter: "all"
     };
+  },
+  mounted() {
+    this.feetchTodos();
   },
   computed: mapGetters({
     todos: "todos/getTodos",
@@ -83,6 +87,10 @@ export default {
       this.addTodoAction(this.newTodo);
       this.newTodo = "";
     },
+    async getTodos() {
+      const res = await getAllTodos();
+      console.log(res);
+    },
     changeStatus(todo) {
       this.changeTodoStatus(todo);
     },
@@ -90,6 +98,7 @@ export default {
       this.saveAllTodosStatus(event);
     },
     ...mapActions({
+      feetchTodos: "todos/fetchTodos",
       addTodoAction: "todos/addTodo",
       changeTodoStatus: "todos/changeTodoStatus",
       removeTodo: "todos/removeTodo",
