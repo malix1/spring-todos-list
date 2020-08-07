@@ -18,6 +18,7 @@ import com.demo.todolists.service.TodoService;
 
 
 @RequestMapping("/api")
+@CrossOrigin("http://localhost:8080")
 @RestController
 public class TodoController {
 	
