@@ -74,6 +74,9 @@ export default {
       filter: "all"
     };
   },
+  mounted() {
+    this.feetchTodos();
+  },
   computed: mapGetters({
     todos: "todos/getTodos",
     remaining: "todos/getRemaining",
@@ -84,9 +87,9 @@ export default {
       this.addTodoAction(this.newTodo);
       this.newTodo = "";
     },
-    async getTodos(){
+    async getTodos() {
       const res = await getAllTodos();
-      console.log(res)
+      console.log(res);
     },
     changeStatus(todo) {
       this.changeTodoStatus(todo);
@@ -95,6 +98,7 @@ export default {
       this.saveAllTodosStatus(event);
     },
     ...mapActions({
+      feetchTodos: "todos/fetchTodos",
       addTodoAction: "todos/addTodo",
       changeTodoStatus: "todos/changeTodoStatus",
       removeTodo: "todos/removeTodo",

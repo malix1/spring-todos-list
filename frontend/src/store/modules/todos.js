@@ -1,16 +1,7 @@
+import { getAllTodos } from "../../api/todoService";
+
 const state = () => ({
-  todos: [
-    {
-      id: 1,
-      title: "Write kanji",
-      completed: false,
-    },
-    {
-      id: 2,
-      title: "Study grammar",
-      completed: false,
-    },
-  ],
+  todos: [],
 });
 
 const getters = {
@@ -48,6 +39,14 @@ const actions = {
     }
   },
 
+  async fetchTodos({ commit }) {
+    const response = await getAllTodos();
+    if (response.status === 200) {
+      console.log(response);
+      commit("saveFetchTodos", response.data.todos);
+    }
+  },
+
   changeTodoStatus({ commit }, todo) {
     const changedTodo = { ...todo, completed: !todo.completed };
     commit("saveChangedTodoStatus", changedTodo);
@@ -65,6 +64,10 @@ const actions = {
 const mutations = {
   pushTodoToTodos(state, newTodo) {
     state.todos.push(newTodo);
+  },
+
+  saveFetchTodos(state, todos) {
+    state.todos = todos;
   },
 
   saveChangedTodoStatus(state, changedTodo) {

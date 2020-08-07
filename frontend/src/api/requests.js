@@ -12,3 +12,9 @@ export const postRequest = async (url, data, config) => {
   const parsedResponse = responseParser(response);
   return parsedResponse;
 };
+
+export const putRequest = async (url, data, config) => {
+  const response = await axios.put(url, data, config);
+  const parsedResponse = responseParser(response);
+  return parsedResponse;
+};
