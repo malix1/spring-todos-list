@@ -9,15 +9,6 @@ const getters = {
     return state.todos;
   },
 
-  getBiggestId: (state) => {
-    return state.todos.reduce(function(prev, current) {
-      if (current.id > prev.id) {
-        return current;
-      } else {
-        return prev;
-      }
-    }).id;
-  },
   getRemaining: (state) => {
     return state.todos.filter((todo) => todo.completed === false).length;
   },
@@ -27,11 +18,9 @@ const getters = {
 };
 
 const actions = {
-  addTodo({ commit, getters }, todo) {
+  addTodo({ commit }, todo) {
     if (todo.trim() !== "") {
-      const biggestId = getters.getBiggestId;
       const newTodo = {
-        id: biggestId + 1,
         title: todo,
         completed: false,
       };
