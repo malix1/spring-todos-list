@@ -1,4 +1,4 @@
-import { getAllTodos } from "../../api/todoService";
+import { getAllTodos, createTodo } from "../../api/todoService";
 
 const state = () => ({
   todos: [],
@@ -18,20 +18,24 @@ const getters = {
 };
 
 const actions = {
-  addTodo({ commit }, todo) {
+  async addTodo({ commit, rootGetters }, todo) {
     if (todo.trim() !== "") {
+      const { username } = rootGetters["users/getUser"];
       const newTodo = {
         title: todo,
         completed: false,
+        username,
       };
-      commit("pushTodoToTodos", newTodo);
+      const response = await createTodo(newTodo);
+      if (response.status === 200) {
+        commit("pushTodoToTodos", response.data.todos);
+      }
     }
   },
 
   async fetchTodos({ commit }) {
     const response = await getAllTodos();
     if (response.status === 200) {
-      console.log(response);
       commit("saveFetchTodos", response.data.todos);
     }
   },
@@ -51,8 +55,8 @@ const actions = {
 };
 
 const mutations = {
-  pushTodoToTodos(state, newTodo) {
-    state.todos.push(newTodo);
+  pushTodoToTodos(state, newTodos) {
+    newTodos.forEach((todo) => state.todos.push(todo));
   },
 
   saveFetchTodos(state, todos) {
