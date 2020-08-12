@@ -33,10 +33,14 @@ const actions = {
     }
   },
 
-  async fetchTodos({ commit }) {
+  async fetchTodos({ commit, rootGetters }) {
     const response = await getAllTodos();
     if (response.status === 200) {
-      commit("saveFetchTodos", response.data.todos);
+      const { username } = rootGetters["users/getUser"];
+      const userTodos = response.data.todos.filter(
+        (todo) => todo.username === username
+      );
+      commit("saveFetchTodos", userTodos);
     }
   },
 
