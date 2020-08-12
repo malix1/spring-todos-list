@@ -21,5 +21,9 @@ public class TodoService {
 	public void insert(List<Todo> todos) {
 		todoRepository.saveAll(todos);
 	}
+	
+	public void deleteById(int id) {
+		todoRepository.deleteById(id);
+	}
 
 }

@@ -1,19 +1,23 @@
 package com.demo.todolists.Controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.todolists.Entity.Todo;
-import com.demo.todolists.responses.TodoResponse;
+import com.demo.todolists.payload.response.TodoResponse;
 import com.demo.todolists.service.TodoService;
 
 
@@ -30,7 +34,6 @@ public class TodoController {
 	@GetMapping(value="/todos")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public TodoResponse retrieveTodos() {
-		response.setStatus("200");
 		response.setMessage("All todos retrieved.");
 		response.setTodos(todoService.getAllTodos());
 		return response;
@@ -42,13 +45,21 @@ public class TodoController {
 		List<Todo> todos = body.get("todos");
 		todoService.insert(todos);	
 		response.setTodos(todos);
-		response.setStatus("200");
 		response.setMessage("Todos saved successfuly.");
 		return response;
 	}
 	
+	@DeleteMapping(value="/todos/{id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public TodoResponse removeTodo(@PathVariable int id) {;
+		todoService.deleteById(id);
+		response.setTodos(null);
+		response.setMessage("Todo removed successfuly.");
+		return response;
+	}
+	
 	@GetMapping("/todos/secured")
-	@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('MODERATOR')	 or hasRole('ADMIN')")
 	public String securedTodos() {
 		return "Secured";
 	}
