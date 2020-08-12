@@ -12,7 +12,7 @@
       enter-active-class="animated fadeInUp"
       leave-active-class="animated fadeOutDown"
     >
-      <div v-for="(todo) in todos" :key="todo.id" class="todo-item">
+      <div class="todo-item" v-for="(todo) in todos" :key="todo.id">
         <div class="todo-item-left">
           <input type="checkbox" :checked="todo.completed" @change="changeStatus(todo)" />
           <div
@@ -46,7 +46,6 @@
     </div>
 
     <div class="extra-container">
-      <button @click="getTodos">Get Todo</button>
       <!--   <div>
         <button :class="{ active: filter == 'all' }" @click="filter = 'all'">All</button>
         <button :class="{ active: filter == 'active' }" @click="filter = 'active'">Active</button>
@@ -64,7 +63,6 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { getAllTodos } from "../../api/todoService";
 export default {
   name: "Todos",
   data: function() {
@@ -86,10 +84,6 @@ export default {
     addTodo() {
       this.addTodoAction(this.newTodo);
       this.newTodo = "";
-    },
-    async getTodos() {
-      const res = await getAllTodos();
-      console.log(res);
     },
     changeStatus(todo) {
       this.changeTodoStatus(todo);

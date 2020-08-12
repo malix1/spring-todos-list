@@ -1,4 +1,4 @@
-import { getAllTodos } from "../../api/todoService";
+import { getAllTodos, createTodo, removeTodo } from "../../api/todoService";
 
 const state = () => ({
   todos: [],
@@ -9,15 +9,6 @@ const getters = {
     return state.todos;
   },
 
-  getBiggestId: (state) => {
-    return state.todos.reduce(function(prev, current) {
-      if (current.id > prev.id) {
-        return current;
-      } else {
-        return prev;
-      }
-    }).id;
-  },
   getRemaining: (state) => {
     return state.todos.filter((todo) => todo.completed === false).length;
   },
@@ -27,68 +18,68 @@ const getters = {
 };
 
 const actions = {
-  addTodo({ commit, getters }, todo) {
+  async addTodo({ commit, rootGetters }, todo) {
     if (todo.trim() !== "") {
-      const biggestId = getters.getBiggestId;
+      const { username } = rootGetters["users/getUser"];
       const newTodo = {
-        id: biggestId + 1,
         title: todo,
         completed: false,
+        username,
       };
-      commit("pushTodoToTodos", newTodo);
+      const response = await createTodo(newTodo);
+      if (response.status === 200) {
+        commit("pushTodoToTodos", response.data.todos);
+      }
     }
   },
 
-  async fetchTodos({ commit }) {
+  async fetchTodos({ commit, rootGetters }) {
     const response = await getAllTodos();
     if (response.status === 200) {
-      console.log(response);
-      commit("saveFetchTodos", response.data.todos);
+      const { username } = rootGetters["users/getUser"];
+      const userTodos = response.data.todos.filter(
+        (todo) => todo.username === username
+      );
+      commit("updateTodos", userTodos);
     }
   },
 
-  changeTodoStatus({ commit }, todo) {
+  changeTodoStatus({ commit, state }, todo) {
     const changedTodo = { ...todo, completed: !todo.completed };
-    commit("saveChangedTodoStatus", changedTodo);
-  },
-
-  removeTodo({ commit }, id) {
-    commit("removeTodoFromTodos", id);
-  },
-
-  changeAllTodosStatus({ commit }, event) {
-    commit("saveAllTodosStatus", event);
-  },
-};
-
-const mutations = {
-  pushTodoToTodos(state, newTodo) {
-    state.todos.push(newTodo);
-  },
-
-  saveFetchTodos(state, todos) {
-    state.todos = todos;
-  },
-
-  saveChangedTodoStatus(state, changedTodo) {
-    const updatedTodo = state.todos.map((todo) => {
+    const updatedTodos = state.todos.map((todo) => {
       if (todo.id === changedTodo.id) {
         return changedTodo;
       }
       return todo;
     });
-    state.todos = updatedTodo;
+    commit("updateTodos", updatedTodos);
   },
-  removeTodoFromTodos(state, id) {
-    const updatedTodos = state.todos.filter((todo) => todo.id !== id);
-    state.todos = updatedTodos;
+
+  async removeTodo({ commit, state }, id) {
+    const response = await removeTodo(id);
+    if (response.status === 200) {
+      const updatedTodos = state.todos.filter((todo) => todo.id !== id);
+      commit("updateTodos", updatedTodos);
+    }
   },
-  saveAllTodosStatus(state, event) {
+
+  changeAllTodosStatus({ commit, state }, event) {
     const updatedTodos = state.todos.map((todo) => {
       return { ...todo, completed: event.target.checked };
     });
+    commit("updateTodos", updatedTodos);
+  },
+};
+
+const mutations = {
+  pushTodoToTodos(state, newTodos) {
+    newTodos.forEach((todo) => state.todos.push(todo));
+  },
+
+  updateTodos(state, updatedTodos) {
     state.todos = updatedTodos;
   },
+
 };
 
 export default {

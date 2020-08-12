@@ -1,4 +1,5 @@
 import { login } from "../../api/userService";
+import router from "../../routes";
 
 const state = () => ({
   user: {
@@ -12,6 +13,9 @@ const state = () => ({
 const getters = {
   getUser: (state) => {
     return state.user;
+  },
+  isLoggedIn: (state) => {
+    return state.user.email === "" ? false : true;
   },
 };
 
@@ -28,13 +32,24 @@ const actions = {
       console.log(response);
       window.$cookies.set("token", response.data.accessToken);
       commit("saveUser", loggedInUser);
-    }   
+    }
+  },
+
+  logout({ commit }) {
+    window.$cookies.remove("token");
+    commit("removeUserFromState");
   },
 };
 
 const mutations = {
   saveUser(state, user) {
     state.user = user;
+    router.push("/todos");
+  },
+
+  removeUserFromState(state) {
+    state.user = { email: "", roles: [], tokenType: "", username: "" };
+    router.push("/login").catch(() => {});
   },
 };
 
