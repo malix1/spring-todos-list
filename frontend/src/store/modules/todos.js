@@ -1,4 +1,4 @@
-import { getAllTodos, createTodo } from "../../api/todoService";
+import { getAllTodos, createTodo, removeTodo } from "../../api/todoService";
 
 const state = () => ({
   todos: [],
@@ -45,8 +45,11 @@ const actions = {
     commit("saveChangedTodoStatus", changedTodo);
   },
 
-  removeTodo({ commit }, id) {
-    commit("removeTodoFromTodos", id);
+  async removeTodo({ commit }, id) {
+    const response = await removeTodo(id);
+    if (response.status === 200) {
+      commit("removeTodoFromTodos", id);
+    }
   },
 
   changeAllTodosStatus({ commit }, event) {

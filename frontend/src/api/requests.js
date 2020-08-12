@@ -18,3 +18,9 @@ export const putRequest = async (url, data, config) => {
   const parsedResponse = responseParser(response);
   return parsedResponse;
 };
+
+export const deleteRequest = async (url, config) => {
+  const response = await axios.delete(url, config);
+  const parsedResponse = responseParser(response);
+  return parsedResponse;
+};
