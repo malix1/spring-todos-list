@@ -40,24 +40,34 @@ const actions = {
       const userTodos = response.data.todos.filter(
         (todo) => todo.username === username
       );
-      commit("saveFetchTodos", userTodos);
+      commit("updateTodos", userTodos);
     }
   },
 
-  changeTodoStatus({ commit }, todo) {
+  changeTodoStatus({ commit, state }, todo) {
     const changedTodo = { ...todo, completed: !todo.completed };
-    commit("saveChangedTodoStatus", changedTodo);
+    const updatedTodos = state.todos.map((todo) => {
+      if (todo.id === changedTodo.id) {
+        return changedTodo;
+      }
+      return todo;
+    });
+    commit("updateTodos", updatedTodos);
   },
 
-  async removeTodo({ commit }, id) {
+  async removeTodo({ commit, state }, id) {
     const response = await removeTodo(id);
     if (response.status === 200) {
-      commit("removeTodoFromTodos", id);
+      const updatedTodos = state.todos.filter((todo) => todo.id !== id);
+      commit("updateTodos", updatedTodos);
     }
   },
 
-  changeAllTodosStatus({ commit }, event) {
-    commit("saveAllTodosStatus", event);
+  changeAllTodosStatus({ commit, state }, event) {
+    const updatedTodos = state.todos.map((todo) => {
+      return { ...todo, completed: event.target.checked };
+    });
+    commit("updateTodos", updatedTodos);
   },
 };
 
@@ -66,29 +76,10 @@ const mutations = {
     newTodos.forEach((todo) => state.todos.push(todo));
   },
 
-  saveFetchTodos(state, todos) {
-    state.todos = todos;
+  updateTodos(state, updatedTodos) {
+    state.todos = updatedTodos;
   },
 
-  saveChangedTodoStatus(state, changedTodo) {
-    const updatedTodo = state.todos.map((todo) => {
-      if (todo.id === changedTodo.id) {
-        return changedTodo;
-      }
-      return todo;
-    });
-    state.todos = updatedTodo;
-  },
-  removeTodoFromTodos(state, id) {
-    const updatedTodos = state.todos.filter((todo) => todo.id !== id);
-    state.todos = updatedTodos;
-  },
-  saveAllTodosStatus(state, event) {
-    const updatedTodos = state.todos.map((todo) => {
-      return { ...todo, completed: event.target.checked };
-    });
-    state.todos = updatedTodos;
-  },
 };
 
 export default {
