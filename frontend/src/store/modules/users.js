@@ -8,6 +8,10 @@ const state = () => ({
     tokenType: "",
     username: "",
   },
+  error: {
+    status: "",
+    message: "",
+  },
 });
 
 const getters = {
@@ -16,6 +20,9 @@ const getters = {
   },
   isLoggedIn: (state) => {
     return state.user.email === "" ? false : true;
+  },
+  getError: (state) => {
+    return state.error;
   },
 };
 
@@ -29,9 +36,10 @@ const actions = {
         tokenType: response.data.tokenType,
         username: response.data.username,
       };
-      console.log(response);
       window.$cookies.set("token", response.data.accessToken);
       commit("saveUser", loggedInUser);
+    } else {
+      commit("giveError", response);
     }
   },
 
@@ -44,12 +52,17 @@ const actions = {
 const mutations = {
   saveUser(state, user) {
     state.user = user;
+    state.error = { status: "", message: "" };
     router.push("/todos");
   },
 
   removeUserFromState(state) {
     state.user = { email: "", roles: [], tokenType: "", username: "" };
     router.push("/login").catch(() => {});
+  },
+
+  giveError(state, response) {
+    state.error = response;
   },
 };
 
