@@ -18,8 +18,9 @@ const getters = {
   getUser: (state) => {
     return state.user;
   },
-  isLoggedIn: (state) => {
-    return state.user.email === "" ? false : true;
+  isLoggedIn: () => {
+    const token = window.$cookies.get("token");
+    return token === "" ? false : true;
   },
   getError: (state) => {
     return state.error;
