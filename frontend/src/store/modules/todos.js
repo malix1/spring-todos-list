@@ -91,6 +91,29 @@ const actions = {
     const response = await updateTodos(state.todos);
     commit("updateStatus", response);
   },
+
+  editTodo({ commit, state }, todo) {
+    const todos = state.todos.map((t) =>
+      t.id === todo.id ? { ...t, editing: true } : t
+    );
+    commit("updateTodos", todos);
+  },
+
+  doneEdit({ commit, state }, { todo, editedTitle }) {
+    console.log(todo, editedTitle);
+    const todos = state.todos.map((t) =>
+      t.id === todo.id ? { ...t, editing: undefined, title: editedTitle } : t
+    );
+    commit("updateTodos", todos);
+  },
+
+  cancelEdit({ commit, state }, todo) {
+    console.log(state.todos, todo);
+    const todos = state.todos.map((t) =>
+      t.id === todo.id ? { ...t, editing: undefined } : t
+    );
+    commit("updateTodos", todos);
+  },
 };
 
 const mutations = {

@@ -26,9 +26,9 @@
               v-else
               class="todo-item-edit"
               type="text"
-              v-model="todo.title"
-              @blur="doneEdit(todo)"
-              @keyup.enter="doneEdit(todo)"
+              v-model="editedTitle"
+              @blur="completeEdit(todo)"
+              @keyup.enter="completeEdit(todo)"
               @keyup.esc="cancelEdit(todo)"
               v-focus
             />
@@ -78,8 +78,8 @@ export default {
   data: function() {
     return {
       newTodo: "",
-      beforeEditCache: "",
       filter: "all",
+      editedTitle: "",
       showAlert: false
     };
   },
@@ -113,13 +113,19 @@ export default {
     changeAllTodosStatus(event) {
       this.saveAllTodosStatus(event);
     },
+    completeEdit(todo) {
+      this.doneEdit({ todo, editedTitle: this.editedTitle });
+    },
     ...mapActions({
       feetchTodos: "todos/fetchTodos",
       addTodoAction: "todos/addTodo",
       changeTodoStatus: "todos/changeTodoStatus",
       updateTodosStatus: "todos/updateTodosStatus",
       removeTodo: "todos/removeTodo",
-      saveAllTodosStatus: "todos/changeAllTodosStatus"
+      saveAllTodosStatus: "todos/changeAllTodosStatus",
+      editTodo: "todos/editTodo",
+      doneEdit: "todos/doneEdit",
+      cancelEdit: "todos/cancelEdit"
     })
   }
 };
