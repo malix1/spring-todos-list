@@ -29,7 +29,6 @@ export default {
   },
   watch: {
     alertStatus: function(newVal) {
-      console.log("alert changed")
       if (newVal) {
         this.showAlert();
       }
