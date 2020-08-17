@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from 'vuex-persistedstate';
 import todos from "./modules/todos";
 import users from "./modules/users"
 
@@ -10,5 +11,6 @@ export default new Vuex.Store({
     todos,
     users
   },
+  plugins:[createPersistedState()],
   strict: true,
 });

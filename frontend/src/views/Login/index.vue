@@ -1,6 +1,7 @@
 <template>
   <div class="form">
     <b-card title="Login Page">
+      <label class="error" v-if="status.message!==''">{{status.message}}</label>
       <b-form @submit="onSubmit">
         <b-form-group id="input-group-1" label="Username:" label-for="input-1" class="form-item">
           <b-form-input id="input-1" v-model="user.username" required placeholder="Enter username"></b-form-input>
@@ -22,7 +23,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Login",
   data() {
@@ -33,6 +34,9 @@ export default {
       }
     };
   },
+  computed: mapGetters({
+    status: "users/getStatus"
+  }),
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
@@ -53,5 +57,8 @@ export default {
 .form-item {
   margin: 3% auto;
   width: 70%;
+}
+.error {
+  color: red;
 }
 </style>
