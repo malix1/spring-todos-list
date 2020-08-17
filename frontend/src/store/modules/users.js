@@ -8,10 +8,7 @@ const state = () => ({
     tokenType: "",
     username: "",
   },
-  error: {
-    status: "",
-    message: "",
-  },
+  status: { code: "", message: "" },
 });
 
 const getters = {
@@ -23,7 +20,7 @@ const getters = {
     return token === "" ? false : true;
   },
   getError: (state) => {
-    return state.error;
+    return state.status;
   },
 };
 
@@ -63,7 +60,7 @@ const mutations = {
   },
 
   giveError(state, response) {
-    state.error = response;
+    state.status = response;
   },
 };
 

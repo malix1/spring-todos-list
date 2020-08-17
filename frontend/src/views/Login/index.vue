@@ -1,7 +1,7 @@
 <template>
   <div class="form">
     <b-card title="Login Page">
-      <label class="error" v-if="error.message!==''">{{error.message}}</label>
+      <label class="error" v-if="status.message!==''">{{status.message}}</label>
       <b-form @submit="onSubmit">
         <b-form-group id="input-group-1" label="Username:" label-for="input-1" class="form-item">
           <b-form-input id="input-1" v-model="user.username" required placeholder="Enter username"></b-form-input>
@@ -35,7 +35,7 @@ export default {
     };
   },
   computed: mapGetters({
-    error: "users/getError"
+    status: "users/getStatus"
   }),
   methods: {
     onSubmit(evt) {

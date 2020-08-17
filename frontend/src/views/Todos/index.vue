@@ -1,84 +1,106 @@
 <template>
-  <div class="container">
-    <input
-      type="text"
-      class="todo-input"
-      placeholder="What needs to be done"
-      v-model="newTodo"
-      @keyup.enter="addTodo"
-    />
-    <transition-group
-      name="fade"
-      enter-active-class="animated fadeInUp"
-      leave-active-class="animated fadeOutDown"
-    >
-      <div class="todo-item" v-for="(todo) in todos" :key="todo.id">
-        <div class="todo-item-left">
-          <input type="checkbox" :checked="todo.completed" @change="changeStatus(todo)" />
-          <div
-            v-if="!todo.editing"
-            @dblclick="editTodo(todo)"
-            class="todo-item-label"
-            :class="{ completed : todo.completed }"
-          >{{ todo.title }}</div>
-          <input
-            v-else
-            class="todo-item-edit"
-            type="text"
-            v-model="todo.title"
-            @blur="doneEdit(todo)"
-            @keyup.enter="doneEdit(todo)"
-            @keyup.esc="cancelEdit(todo)"
-            v-focus
-          />
+  <div>
+    <div class="container">
+      <input
+        type="text"
+        class="todo-input"
+        placeholder="What needs to be done"
+        v-model="newTodo"
+        @keyup.enter="addTodo"
+      />
+      <transition-group
+        name="fade"
+        enter-active-class="animated fadeInUp"
+        leave-active-class="animated fadeOutDown"
+      >
+        <div class="todo-item" v-for="(todo) in todos" :key="todo.id">
+          <div class="todo-item-left">
+            <input type="checkbox" :checked="todo.completed" @change="changeStatus(todo)" />
+            <div
+              v-if="!todo.editing"
+              @dblclick="editTodo(todo)"
+              class="todo-item-label"
+              :class="{ completed : todo.completed }"
+            >{{ todo.title }}</div>
+            <input
+              v-else
+              class="todo-item-edit"
+              type="text"
+              v-model="todo.title"
+              @blur="doneEdit(todo)"
+              @keyup.enter="doneEdit(todo)"
+              @keyup.esc="cancelEdit(todo)"
+              v-focus
+            />
+          </div>
+          <div class="remove-item" @click="removeTodo(todo.id)">&times;</div>
         </div>
-        <div class="remove-item" @click="removeTodo(todo.id)">&times;</div>
-      </div>
-    </transition-group>
+      </transition-group>
 
-    <div class="extra-container">
-      <div>
-        <label>
-          <input type="checkbox" :checked="!anyRemaining" @change="changeAllTodosStatus" /> Check All
-        </label>
+      <div class="extra-container">
+        <div>
+          <label>
+            <input type="checkbox" :checked="!anyRemaining" @change="changeAllTodosStatus" /> Check All
+          </label>
+        </div>
+        <div>{{ remaining }} items left</div>
       </div>
-      <div>{{ remaining }} items left</div>
-    </div>
 
-    <div class="extra-container">
-      <!--   <div>
+      <div class="extra-container">
+        <!--   <div>
         <button :class="{ active: filter == 'all' }" @click="filter = 'all'">All</button>
         <button :class="{ active: filter == 'active' }" @click="filter = 'active'">Active</button>
         <button :class="{ active: filter == 'completed' }" @click="filter = 'completed'">Completed</button>
-      </div>-->
+        </div>-->
 
-      <div>
-        <!--  <transition name="fade">
+        <div>
+          <button @click="updateTodosStatus">Save Status</button>
+          <!--  <transition name="fade">
           <button v-if="showClearCompletedButton" @click="clearCompleted">Clear Completed</button>
-        </transition>-->
+          </transition>-->
+        </div>
       </div>
+    </div>
+    <div>
+      <Alert :alertStatus="showAlert" :status="status"></Alert>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import Alert from "../../components/Alert";
 export default {
   name: "Todos",
+  components: {
+    Alert
+  },
   data: function() {
     return {
       newTodo: "",
       beforeEditCache: "",
-      filter: "all"
+      filter: "all",
+      showAlert: false
     };
   },
   mounted() {
     this.feetchTodos();
+    this.$store.subscribe(mutation => {
+      switch (mutation.type) {
+        case "todos/updateStatus":
+          this.showAlert = true;
+          break;
+        default:
+          this.showAlert = false;
+          break;
+      }
+    });
   },
   computed: mapGetters({
     todos: "todos/getTodos",
     remaining: "todos/getRemaining",
-    anyRemaining: "todos/getAnyRemaining"
+    anyRemaining: "todos/getAnyRemaining",
+    status: "todos/getStatus"
   }),
   methods: {
     addTodo() {
@@ -95,6 +117,7 @@ export default {
       feetchTodos: "todos/fetchTodos",
       addTodoAction: "todos/addTodo",
       changeTodoStatus: "todos/changeTodoStatus",
+      updateTodosStatus: "todos/updateTodosStatus",
       removeTodo: "todos/removeTodo",
       saveAllTodosStatus: "todos/changeAllTodosStatus"
     })
@@ -107,6 +130,14 @@ export default {
 .container {
   max-width: 60%;
   margin: 5% auto;
+}
+
+.alert {
+  width: 35%;
+  position: absolute;
+  margin-left: 5%;
+  bottom: 0;
+  left: 5;
 }
 
 .todo-input {

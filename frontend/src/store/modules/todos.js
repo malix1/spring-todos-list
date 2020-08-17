@@ -1,7 +1,13 @@
-import { getAllTodos, createTodo, removeTodo } from "../../api/todoService";
+import {
+  getAllTodos,
+  createTodo,
+  removeTodo,
+  updateTodos,
+} from "../../api/todoService";
 
 const state = () => ({
   todos: [],
+  status: { code: "", message: "" },
 });
 
 const getters = {
@@ -15,6 +21,9 @@ const getters = {
   getAnyRemaining: (state, getters) => {
     return getters.getRemaining != 0;
   },
+  getStatus: (state) => {
+    return state.status;
+  },
 };
 
 const actions = {
@@ -22,13 +31,17 @@ const actions = {
     if (todo.trim() !== "") {
       const { username } = rootGetters["users/getUser"];
       const newTodo = {
-        title: todo,
+        title: todo.trim(),
         completed: false,
         username,
       };
       const response = await createTodo(newTodo);
       if (response.status === 200) {
         commit("pushTodoToTodos", response.data.todos);
+        commit("updateStatus", {
+          code: response.code,
+          message: response.message,
+        });
       }
     }
   },
@@ -60,6 +73,10 @@ const actions = {
     if (response.status === 200) {
       const updatedTodos = state.todos.filter((todo) => todo.id !== id);
       commit("updateTodos", updatedTodos);
+      commit("updateStatus", {
+        code: response.code,
+        message: response.message,
+      });
     }
   },
 
@@ -68,6 +85,11 @@ const actions = {
       return { ...todo, completed: event.target.checked };
     });
     commit("updateTodos", updatedTodos);
+  },
+
+  async updateTodosStatus({ commit, state }) {
+    const response = await updateTodos(state.todos);
+    commit("updateStatus", response);
   },
 };
 
@@ -80,6 +102,9 @@ const mutations = {
     state.todos = updatedTodos;
   },
 
+  updateStatus(state, response) {
+    state.status = response;
+  },
 };
 
 export default {
